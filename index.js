@@ -4,6 +4,7 @@ function AddCSSToHeadPlugin(opts) {
   opts = opts || {};
   this.minify = 'minify' in opts ? opts.minify : true;
   this.clean = 'clean' in opts ? opts.clean : true;
+  this.purify = 'purify' in opts ? opts.purify : true;
   this.amp = opts.amp;
 }
 
@@ -26,7 +27,7 @@ AddCSSToHeadPlugin.prototype.apply = function(compiler) {
 
     htmlFiles.forEach(function(filename) {
       var html = compilation.assets[filename].source();
-      var purified = purify(html, css, { minify: self.minify });
+      var purified = self.purify ? purify(html, css, { minify: self.minify }) : css;
       html = insertIntoHead(html, purified, self.amp);
       updateAsset(compilation.assets, filename, html);
     });
